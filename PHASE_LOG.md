@@ -96,10 +96,21 @@ plain build/test is unaffected). Built `OpenBench-ModbusSimulator-0.1.0-win-x64.
   defined — also improves the tool-page overview slot). Live & verified on
   the pages.dev deploy.
 
+- **Email capture** for Pro-tier interest (commit `a23afc0`):
+  `EmailCapture.astro` on the tool page (below the overview) → posts to
+  `functions/api/notify.ts` (Cloudflare Pages Function) → upserts a D1 table
+  `pro_interest`. Honeypot + client/server email validation; fires a Plausible
+  `pro_interest` event; shows "not live yet" until the `DB` binding exists.
+  Deployed and verified (`POST /api/notify` → `not_configured` 503 as
+  expected). **Still needs:** create a D1 DB `openbench`, run
+  `migrations/0001_pro_interest.sql`, bind it as `DB` on the Pages project
+  (steps in `marketing-site/functions/README.md`).
+
 **Not done yet:**
+- Create the D1 database + `DB` binding to activate the email capture.
 - Plausible custom events on the `data-event` hooks (download / donate / docs
-  / source clicks) — Phase 2 core deliverable.
-- Email capture ("notify me about Pro features") on the tool page.
+  / source clicks) — needs the Plausible account/script. The `pro_interest`
+  event is already wired in the form.
 - Directory / community submissions (r/PLC, r/embedded, AlternativeTo, PH).
 - Register `openbench.dev` + attach it to the Pages project (Cloudflare
   Registrar — same dashboard).
