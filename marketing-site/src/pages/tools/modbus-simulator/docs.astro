@@ -1,0 +1,174 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+const repo = 'https://github.com/openbench-tools/openbench';
+---
+
+<BaseLayout
+  title="Modbus Simulator — Documentation"
+  description="Install and usage guide for the OpenBench Modbus Simulator: TCP and RTU, slave and master, register table and traffic log."
+>
+  <article class="mx-auto max-w-3xl px-6 py-16">
+    <p class="font-mono text-xs uppercase tracking-widest text-[var(--ob-amber-dim)]">
+      Documentation
+    </p>
+    <h1 class="mt-2 font-display text-3xl font-700">Modbus Simulator</h1>
+    <p class="mt-3 text-[var(--ob-ink)]/75">
+      A free tool for exercising Modbus TCP and RTU without real hardware —
+      as a simulated device (slave) or as a polling client (master).
+    </p>
+
+    <nav class="mt-8 rounded-md border border-[var(--ob-paper-line)] p-4 font-mono text-sm">
+      <p class="text-xs uppercase tracking-wide text-[var(--ob-ink)]/50">On this page</p>
+      <ul class="mt-2 space-y-1">
+        <li><a class="hover:text-[var(--ob-amber-dim)]" href="#install">Install</a></li>
+        <li><a class="hover:text-[var(--ob-amber-dim)]" href="#tcp-slave">Quick start — TCP slave</a></li>
+        <li><a class="hover:text-[var(--ob-amber-dim)]" href="#tcp-master">Quick start — TCP master</a></li>
+        <li><a class="hover:text-[var(--ob-amber-dim)]" href="#serial">Serial (RTU)</a></li>
+        <li><a class="hover:text-[var(--ob-amber-dim)]" href="#registers">The register table</a></li>
+        <li><a class="hover:text-[var(--ob-amber-dim)]" href="#log">Traffic log &amp; CSV export</a></li>
+        <li><a class="hover:text-[var(--ob-amber-dim)]" href="#troubleshooting">Troubleshooting</a></li>
+        <li><a class="hover:text-[var(--ob-amber-dim)]" href="#build">Building from source</a></li>
+      </ul>
+    </nav>
+
+    <section id="install" class="mt-12">
+      <h2 class="font-display text-xl font-600">Install</h2>
+      <ol class="mt-4 list-decimal space-y-2 pl-5 text-[var(--ob-ink)]/85">
+        <li>
+          Download <code class="font-mono text-sm">OpenBench-ModbusSimulator-&lt;version&gt;-win-x64.exe</code>
+          from the <a class="underline hover:text-[var(--ob-amber-dim)]" href={`${repo}/releases/latest`}>latest release</a>.
+        </li>
+        <li>
+          It is a single self-contained executable — no installer, no .NET
+          runtime needed. Put it wherever you like.
+        </li>
+        <li>
+          On first run, Windows SmartScreen may warn about an unrecognised
+          publisher (the build is not code-signed yet). Choose
+          <em>More info → Run anyway</em>, or verify the checksum first:
+          <pre class="mt-2 overflow-x-auto rounded bg-[var(--ob-blueprint-900)] p-3 font-mono text-xs text-[var(--ob-blueprint-300)]">sha256sum -c SHA256SUMS.txt</pre>
+        </li>
+      </ol>
+      <p class="mt-3 text-sm text-[var(--ob-ink)]/70">
+        Requirements: Windows 10 or 11 (x64). A physical or virtual COM port is
+        only needed for RTU mode.
+      </p>
+    </section>
+
+    <section id="tcp-slave" class="mt-12">
+      <h2 class="font-display text-xl font-600">Quick start — TCP slave</h2>
+      <p class="mt-2 text-[var(--ob-ink)]/85">
+        Use this to stand in for a device your SCADA system, PLC program, or
+        integration test expects to connect to.
+      </p>
+      <ol class="mt-4 list-decimal space-y-2 pl-5 text-[var(--ob-ink)]/85">
+        <li>Set <strong>Role</strong> to <em>Slave</em> and <strong>Transport</strong> to <em>Tcp</em>.</li>
+        <li>Set <strong>Port</strong> (default <code class="font-mono text-sm">502</code>; use a port above 1024 if 502 needs admin rights) and <strong>Unit / slave ID</strong>.</li>
+        <li>Click <strong>Start</strong>. The log shows <code class="font-mono text-sm">Listening on 0.0.0.0:502</code>.</li>
+        <li>In the register table, pick a table (e.g. <em>HoldingRegisters</em>), set a start address and count, and type values into the <strong>Value</strong> column.</li>
+        <li>Point your Modbus client at <code class="font-mono text-sm">&lt;this machine's IP&gt;:502</code>. Reads return your values; writes update the table and appear in the log.</li>
+      </ol>
+    </section>
+
+    <section id="tcp-master" class="mt-12">
+      <h2 class="font-display text-xl font-600">Quick start — TCP master</h2>
+      <p class="mt-2 text-[var(--ob-ink)]/85">
+        Use this to poll a real device (or another simulator) and watch its
+        registers.
+      </p>
+      <ol class="mt-4 list-decimal space-y-2 pl-5 text-[var(--ob-ink)]/85">
+        <li>Set <strong>Role</strong> to <em>Master</em>, <strong>Transport</strong> to <em>Tcp</em>.</li>
+        <li>Enter the device <strong>Host</strong> and <strong>Port</strong>, its <strong>Unit / slave ID</strong>, and a <strong>Poll interval</strong>.</li>
+        <li>Choose the <strong>Table</strong>, <strong>Start</strong> address and <strong>Count</strong> you want to read — that becomes the poll.</li>
+        <li>Click <strong>Start</strong>. The register table fills in and refreshes every interval; each poll is logged.</li>
+        <li>Editing a value while running as master sends a write request to the device for that address.</li>
+      </ol>
+    </section>
+
+    <section id="serial" class="mt-12">
+      <h2 class="font-display text-xl font-600">Serial (RTU)</h2>
+      <p class="mt-2 text-[var(--ob-ink)]/85">
+        Set <strong>Transport</strong> to <em>Rtu</em>. The panel then shows serial
+        settings:
+      </p>
+      <ul class="mt-3 list-disc space-y-1 pl-5 text-[var(--ob-ink)]/85">
+        <li><strong>Serial port</strong> — click <em>Refresh</em> if you plugged in an adapter after opening the app.</li>
+        <li><strong>Baud rate</strong>, <strong>Parity</strong>, <strong>Data</strong> bits, <strong>Stop</strong> bits — must match the other end exactly.</li>
+      </ul>
+      <p class="mt-3 text-[var(--ob-ink)]/85">
+        For a loopback test on one PC, pair two virtual COM ports (e.g. with
+        <code class="font-mono text-sm">com0com</code>) and run one instance as
+        slave on the first port and another as master on the second.
+      </p>
+      <p class="mt-3 rounded-md border border-[var(--ob-amber-dim)]/40 bg-[var(--ob-amber)]/10 p-3 text-sm text-[var(--ob-ink)]/80">
+        RTU framing uses an idle-gap timeout. If you see CRC or framing errors
+        at high baud rates on a slow USB adapter, raise the inter-frame gap in
+        the source (<code class="font-mono text-xs">SerialOptions.InterFrameGapMs</code>)
+        — a configurable field is planned.
+      </p>
+    </section>
+
+    <section id="registers" class="mt-12">
+      <h2 class="font-display text-xl font-600">The register table</h2>
+      <ul class="mt-3 list-disc space-y-1 pl-5 text-[var(--ob-ink)]/85">
+        <li>Four tables, each spanning the full 0–65535 address space: <em>Coils</em>, <em>DiscreteInputs</em>, <em>HoldingRegisters</em>, <em>InputRegisters</em>.</li>
+        <li><strong>Address</strong> is the zero-based protocol address. <strong>Ref</strong> is the conventional reference number (holding register 0 shows as <code class="font-mono text-sm">40001</code>).</li>
+        <li>Register values are 16-bit (0–65535). The <strong>Hex</strong> column is read-only.</li>
+        <li>Bit tables show an <strong>On</strong> checkbox instead of a value.</li>
+        <li>Discrete inputs and input registers are read-only over the wire, but you can still set them here to simulate device state.</li>
+      </ul>
+    </section>
+
+    <section id="log" class="mt-12">
+      <h2 class="font-display text-xl font-600">Traffic log &amp; CSV export</h2>
+      <p class="mt-2 text-[var(--ob-ink)]/85">
+        Every frame is logged with time, direction (<code class="font-mono text-sm">RX</code>/<code class="font-mono text-sm">TX</code>),
+        unit ID, function, a decoded detail string, and the raw ADU bytes as hex.
+        Exceptions are flagged with their code.
+      </p>
+      <p class="mt-2 text-[var(--ob-ink)]/85">
+        <strong>Export CSV…</strong> writes the current log to a file
+        (<code class="font-mono text-sm">Timestamp,Direction,UnitId,Function,Address,Quantity,Exception,Detail,RawHex</code>).
+        <strong>Clear</strong> empties it. The view keeps the most recent 1000 rows.
+      </p>
+    </section>
+
+    <section id="troubleshooting" class="mt-12">
+      <h2 class="font-display text-xl font-600">Troubleshooting</h2>
+      <dl class="mt-4 space-y-4 text-[var(--ob-ink)]/85">
+        <div>
+          <dt class="font-600">"Failed to start" on a TCP slave</dt>
+          <dd class="text-sm">Port 502 needs administrator rights, or another process (often a real Modbus service) already holds it. Use a higher port.</dd>
+        </div>
+        <div>
+          <dt class="font-600">Master logs "response timeout"</dt>
+          <dd class="text-sm">Wrong host/port, wrong unit ID, a firewall in the way, or the device is slower than the response timeout. Raise the timeout and confirm the unit ID.</dd>
+        </div>
+        <div>
+          <dt class="font-600">Master logs an exception code</dt>
+          <dd class="text-sm"><em>IllegalDataAddress</em> means the address range you asked for does not exist on that device. <em>IllegalFunction</em> means it does not support that function code.</dd>
+        </div>
+        <div>
+          <dt class="font-600">Serial: nothing happens / CRC errors</dt>
+          <dd class="text-sm">Baud, parity, data bits and stop bits must match on both ends. Confirm the COM port and that no other program has it open.</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section id="build" class="mt-12">
+      <h2 class="font-display text-xl font-600">Building from source</h2>
+      <p class="mt-2 text-[var(--ob-ink)]/85">
+        Requires the .NET 10 SDK.
+      </p>
+      <pre class="mt-3 overflow-x-auto rounded bg-[var(--ob-blueprint-900)] p-4 font-mono text-xs text-[var(--ob-blueprint-300)]">git clone {repo}.git
+cd openbench/tool-modbus-sim
+dotnet test ModbusSim.slnx
+dotnet run --project src/ModbusSim.App -c Release</pre>
+      <p class="mt-3 text-sm text-[var(--ob-ink)]/70">
+        Full source, issue tracker, and build notes:
+        <a class="underline hover:text-[var(--ob-amber-dim)]" href={`${repo}/tree/main/tool-modbus-sim`}>github.com/openbench-tools/openbench</a>.
+      </p>
+    </section>
+  </article>
+</BaseLayout>
