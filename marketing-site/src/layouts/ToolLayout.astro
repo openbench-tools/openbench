@@ -16,6 +16,8 @@ interface Props {
   downloadUrl?: string;
   version?: string;
   releaseDate?: Date;
+  screenshot?: string;
+  screenshotAlt?: string;
   slug: string;
 }
 
@@ -32,6 +34,8 @@ const {
   downloadUrl,
   version,
   releaseDate,
+  screenshot,
+  screenshotAlt,
   slug,
 } = Astro.props;
 
@@ -45,6 +49,7 @@ const jsonLd = {
   ...(version ? { softwareVersion: version } : {}),
   ...(releaseDate ? { datePublished: releaseDate.toISOString().slice(0, 10) } : {}),
   ...(status === 'live' ? { downloadUrl: downloadUrl ?? `${sourceUrl}/releases/latest` } : {}),
+  ...(screenshot ? { screenshot: new URL(screenshot, Astro.site).href } : {}),
   license: `${sourceUrl}/blob/main/tool-modbus-sim/LICENSE`,
   offers: {
     '@type': 'Offer',
@@ -82,6 +87,21 @@ const jsonLd = {
       </div>
     </div>
   </section>
+
+  {screenshot && (
+    <section class="border-b border-[var(--ob-paper-line)] bg-[var(--ob-blueprint-900)]">
+      <div class="mx-auto max-w-5xl px-6 py-10">
+        <img
+          src={screenshot}
+          alt={screenshotAlt ?? `${name} — application screenshot`}
+          width="1709"
+          height="1092"
+          loading="lazy"
+          class="w-full rounded-md border border-[var(--ob-blueprint-600)] shadow-lg"
+        />
+      </div>
+    </section>
+  )}
 
   <section class="mx-auto max-w-5xl px-6 py-14">
     <div class="grid gap-12 sm:grid-cols-[1.4fr_1fr]">

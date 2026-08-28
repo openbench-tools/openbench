@@ -16,6 +16,8 @@ const tools = defineCollection({
     downloadUrl: z.string().optional(),
     sourceUrl: z.string(),
     docsUrl: z.string().optional(),
+    screenshot: z.string().optional(), // path under /public, e.g. "/screenshots/foo.png"
+    screenshotAlt: z.string().optional(),
     protocol: z.string().optional(), // e.g. "Modbus RTU/TCP" — shown as a spec-sheet row
   }),
 });

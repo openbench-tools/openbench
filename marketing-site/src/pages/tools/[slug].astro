@@ -12,7 +12,7 @@ export async function getStaticPaths() {
 
 const { tool } = Astro.props;
 const { Content } = await render(tool);
-const { name, tagline, description, status, protocol, features, requirements, sourceUrl, docsUrl, downloadUrl, version, releaseDate } = tool.data;
+const { name, tagline, description, status, protocol, features, requirements, sourceUrl, docsUrl, downloadUrl, version, releaseDate, screenshot, screenshotAlt } = tool.data;
 ---
 
 <ToolLayout
@@ -28,6 +28,8 @@ const { name, tagline, description, status, protocol, features, requirements, so
   downloadUrl={downloadUrl}
   version={version}
   releaseDate={releaseDate}
+  screenshot={screenshot}
+  screenshotAlt={screenshotAlt}
   slug={tool.id}
 >
   <Content />

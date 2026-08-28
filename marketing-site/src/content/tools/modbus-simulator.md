@@ -23,6 +23,8 @@ requirements:
 sourceUrl: "https://github.com/openbench-tools/openbench"
 docsUrl: "/tools/modbus-simulator/docs"
 downloadUrl: "https://github.com/openbench-tools/openbench/releases/latest"
+screenshot: "/screenshots/modbus-simulator.png"
+screenshotAlt: "The Modbus Simulator running as a TCP slave: a register table with holding registers 40001–40006 populated, and a live traffic log showing incoming read and write requests with decoded values and raw bytes."
 ---
 
 ## Why this exists
