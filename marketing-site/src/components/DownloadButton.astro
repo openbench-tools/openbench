@@ -50,7 +50,12 @@ if (status === 'live') {
     </a>
     <span class="font-mono text-xs text-[var(--ob-blueprint-300)]">
       {meta || 'Latest release'} ·{' '}
-      <a href={releasesPage} class="underline hover:text-white">all releases</a>
+      <a
+        href={releasesPage}
+        data-event="releases_click"
+        data-tool={toolName}
+        class="underline hover:text-white"
+      >all releases</a>
     </span>
   </div>
 ) : (

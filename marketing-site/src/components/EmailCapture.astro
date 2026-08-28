@@ -100,8 +100,7 @@ const {
       if (res.ok && out.ok) {
         form.reset();
         setMsg("Thanks — we'll be in touch.", 'ok');
-        // @ts-ignore — plausible is injected by the analytics script
-        if (window.plausible) window.plausible('pro_interest', { props: { tool: String(data.get('tool') ?? '') } });
+        window.plausible?.('pro_interest', { props: { tool: String(data.get('tool') ?? '') } });
       } else if (out.error === 'not_configured') {
         setMsg("Signups aren't live yet — check back soon.", 'error');
       } else {

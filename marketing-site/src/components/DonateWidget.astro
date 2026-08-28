@@ -1,8 +1,10 @@
 ---
 interface Props {
   compact?: boolean;
+  /** Optional context for analytics, e.g. a tool slug or "footer". */
+  context?: string;
 }
-const { compact = false } = Astro.props;
+const { compact = false, context } = Astro.props;
 ---
 
 <div class:list={["flex flex-wrap items-center gap-3", compact ? "" : "rounded-md border border-[var(--ob-paper-line)] p-5"]}>
@@ -14,6 +16,8 @@ const { compact = false } = Astro.props;
   <a
     href="https://ko-fi.com/openbench"
     data-event="donate_click"
+    data-prop-provider="ko-fi"
+    data-prop-context={context ?? 'donate'}
     class="inline-flex items-center gap-2 rounded border border-[var(--ob-ink)] px-4 py-2 font-mono text-sm hover:border-[var(--ob-amber-dim)] hover:text-[var(--ob-amber-dim)]"
   >
     ☕ Buy me a coffee
@@ -21,6 +25,8 @@ const { compact = false } = Astro.props;
   <a
     href="https://github.com/sponsors/openbench"
     data-event="donate_click"
+    data-prop-provider="github-sponsors"
+    data-prop-context={context ?? 'donate'}
     class="inline-flex items-center gap-2 rounded border border-[var(--ob-ink)] px-4 py-2 font-mono text-sm hover:border-[var(--ob-amber-dim)] hover:text-[var(--ob-amber-dim)]"
   >
     ★ GitHub Sponsors

@@ -76,12 +76,18 @@ const jsonLd = {
         <a
           href={sourceUrl}
           data-event="source_click"
+          data-tool={slug}
           class="font-mono text-sm text-[var(--ob-blueprint-300)] hover:text-white"
         >
           View source →
         </a>
         {docsUrl && (
-          <a href={docsUrl} class="font-mono text-sm text-[var(--ob-blueprint-300)] hover:text-white">
+          <a
+            href={docsUrl}
+            data-event="docs_click"
+            data-tool={slug}
+            class="font-mono text-sm text-[var(--ob-blueprint-300)] hover:text-white"
+          >
             Docs →
           </a>
         )}
@@ -139,7 +145,7 @@ const jsonLd = {
           </ul>
         </div>
 
-        <DonateWidget />
+        <DonateWidget context={slug} />
       </div>
     </div>
   </section>

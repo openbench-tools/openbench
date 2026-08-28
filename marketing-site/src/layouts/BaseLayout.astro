@@ -8,6 +8,10 @@ interface Props {
   description: string;
 }
 const { title, description } = Astro.props;
+
+// Set PUBLIC_PLAUSIBLE_DOMAIN in the host's env (Cloudflare Pages → Settings →
+// Variables) to turn analytics on. Left unset locally / until an account exists.
+const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN;
 ---
 
 <!doctype html>
@@ -23,8 +27,23 @@ const { title, description } = Astro.props;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
     <link rel="alternate" type="application/rss+xml" title="OpenBench" href="/rss.xml" />
-    <!-- Analytics: replace with your Plausible/Umami domain once deployed -->
-    <!-- <script defer data-domain="openbench.dev" src="https://plausible.io/js/script.js"></script> -->
+
+    {/* Analytics. Privacy-friendly, no cookies. Loads only when the domain is configured. */}
+    <script is:inline>
+      window.plausible =
+        window.plausible ||
+        function () {
+          (window.plausible.q = window.plausible.q || []).push(arguments);
+        };
+    </script>
+    {plausibleDomain && (
+      <script
+        is:inline
+        defer
+        data-domain={plausibleDomain}
+        src="https://plausible.io/js/script.js"
+      />
+    )}
   </head>
   <body>
     <SiteNav />
@@ -33,15 +52,22 @@ const { title, description } = Astro.props;
     </main>
     <SiteFooter />
     <script>
-      // Fires a Plausible custom event for any element with data-event.
-      // Safe no-op if Plausible isn't loaded yet (e.g. in local dev).
+      // Fires a Plausible custom event for any clicked element (or ancestor)
+      // carrying `data-event`. `data-tool` and any `data-prop-*` become event
+      // props. Queued safely via the shim above until the script loads; a
+      // complete no-op when analytics is disabled.
       document.addEventListener('click', (e) => {
-        const target = (e.target as HTMLElement)?.closest('[data-event]') as HTMLElement | null;
-        if (!target) return;
-        const event = target.dataset.event;
-        const tool = target.dataset.tool;
-        // @ts-ignore — plausible is injected by the analytics script tag above
-        if (event && window.plausible) window.plausible(event, { props: tool ? { tool } : undefined });
+        const el = (e.target as HTMLElement)?.closest<HTMLElement>('[data-event]');
+        const name = el?.dataset.event;
+        if (!el || !name) return;
+
+        const props: Record<string, string> = {};
+        if (el.dataset.tool) props.tool = el.dataset.tool;
+        for (const attr of Array.from(el.attributes)) {
+          if (attr.name.startsWith('data-prop-')) props[attr.name.slice(10)] = attr.value;
+        }
+
+        window.plausible?.(name, Object.keys(props).length ? { props } : undefined);
       });
     </script>
   </body>
