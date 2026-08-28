@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ModbusSim.App/ModbusSim.App.csproj" />
+    <Project Path="src/ModbusSim.Core/ModbusSim.Core.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ModbusSim.Core.Tests/ModbusSim.Core.Tests.csproj" />
+  </Folder>
+</Solution>

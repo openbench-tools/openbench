@@ -1,0 +1,154 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ModbusSim.App.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="640"
+        x:Class="ModbusSim.App.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        x:Name="Root"
+        Width="1040" Height="680"
+        Title="OpenBench Modbus Simulator">
+
+    <Design.DataContext>
+        <vm:MainViewModel />
+    </Design.DataContext>
+
+    <Grid ColumnDefinitions="330,*" Margin="12" ColumnSpacing="12">
+
+        <!-- ============ connection panel ============ -->
+        <Border Grid.Column="0" BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                BorderThickness="1" CornerRadius="6" Padding="14">
+            <ScrollViewer>
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Connection" FontSize="16" FontWeight="SemiBold" />
+
+                    <TextBlock Text="Role" Classes="label" />
+                    <ComboBox ItemsSource="{Binding Roles}" SelectedItem="{Binding Role}"
+                              HorizontalAlignment="Stretch" IsEnabled="{Binding SettingsEnabled}" />
+
+                    <TextBlock Text="Transport" Classes="label" />
+                    <ComboBox ItemsSource="{Binding Transports}" SelectedItem="{Binding Transport}"
+                              HorizontalAlignment="Stretch" IsEnabled="{Binding SettingsEnabled}" />
+
+                    <TextBlock Text="{Binding RoleHint}" TextWrapping="Wrap" Opacity="0.7" FontSize="12" />
+
+                    <!-- TCP -->
+                    <StackPanel Spacing="8" IsVisible="{Binding IsTcp}">
+                        <TextBlock Text="Host" Classes="label" IsVisible="{Binding IsMaster}" />
+                        <TextBox Text="{Binding Host}" IsVisible="{Binding IsMaster}"
+                                 IsEnabled="{Binding SettingsEnabled}" />
+                        <TextBlock Text="Port" Classes="label" />
+                        <TextBox Text="{Binding Port}" IsEnabled="{Binding SettingsEnabled}" />
+                    </StackPanel>
+
+                    <!-- RTU -->
+                    <StackPanel Spacing="8" IsVisible="{Binding IsRtu}">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <TextBlock Text="Serial port" Classes="label" />
+                            <Button Grid.Column="1" Content="Refresh" Command="{Binding RefreshPortsCommand}"
+                                    Padding="6,2" FontSize="11" IsEnabled="{Binding SettingsEnabled}" />
+                        </Grid>
+                        <ComboBox ItemsSource="{Binding SerialPorts}" SelectedItem="{Binding SerialPort}"
+                                  HorizontalAlignment="Stretch" IsEnabled="{Binding SettingsEnabled}" />
+                        <TextBlock Text="Baud rate" Classes="label" />
+                        <ComboBox ItemsSource="{Binding BaudRates}" SelectedItem="{Binding BaudRate}"
+                                  HorizontalAlignment="Stretch" IsEnabled="{Binding SettingsEnabled}" />
+                        <Grid ColumnDefinitions="*,*,*" ColumnSpacing="6">
+                            <StackPanel Grid.Column="0" Spacing="4">
+                                <TextBlock Text="Parity" Classes="label" />
+                                <ComboBox ItemsSource="{Binding Parities}" SelectedItem="{Binding Parity}"
+                                          HorizontalAlignment="Stretch" IsEnabled="{Binding SettingsEnabled}" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Spacing="4">
+                                <TextBlock Text="Data" Classes="label" />
+                                <ComboBox ItemsSource="{Binding DataBitOptions}" SelectedItem="{Binding DataBits}"
+                                          HorizontalAlignment="Stretch" IsEnabled="{Binding SettingsEnabled}" />
+                            </StackPanel>
+                            <StackPanel Grid.Column="2" Spacing="4">
+                                <TextBlock Text="Stop" Classes="label" />
+                                <ComboBox ItemsSource="{Binding StopBitOptions}" SelectedItem="{Binding StopBits}"
+                                          HorizontalAlignment="Stretch" IsEnabled="{Binding SettingsEnabled}" />
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+
+                    <TextBlock Text="Unit / slave ID" Classes="label" />
+                    <TextBox Text="{Binding UnitId}" IsEnabled="{Binding SettingsEnabled}" />
+
+                    <StackPanel Spacing="8" IsVisible="{Binding IsMaster}">
+                        <TextBlock Text="Poll interval (ms)" Classes="label" />
+                        <TextBox Text="{Binding PollIntervalMs}" IsEnabled="{Binding SettingsEnabled}" />
+                        <TextBlock Text="Response timeout (ms)" Classes="label" />
+                        <TextBox Text="{Binding ResponseTimeoutMs}" IsEnabled="{Binding SettingsEnabled}" />
+                    </StackPanel>
+
+                    <Button Content="{Binding StartStopLabel}" Command="{Binding StartStopCommand}"
+                            HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                            Margin="0,6,0,0" Padding="0,8" FontWeight="SemiBold" />
+                    <TextBlock Text="{Binding StatusText}" TextWrapping="Wrap" FontSize="12" Opacity="0.8" />
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <!-- ============ data + log ============ -->
+        <Grid Grid.Column="1" RowDefinitions="Auto,*,6,260">
+
+            <!-- register table controls -->
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8" Margin="0,0,0,8">
+                <TextBlock Text="Table" VerticalAlignment="Center" Classes="label" />
+                <ComboBox ItemsSource="{Binding Tables}" SelectedItem="{Binding SelectedTable}" MinWidth="150" />
+                <TextBlock Text="Start" VerticalAlignment="Center" Classes="label" />
+                <TextBox Text="{Binding StartAddress}" Width="80" />
+                <TextBlock Text="Count" VerticalAlignment="Center" Classes="label" />
+                <TextBox Text="{Binding RowCount}" Width="70" />
+            </StackPanel>
+
+            <DataGrid Grid.Row="1" ItemsSource="{Binding Rows}" IsReadOnly="False"
+                      GridLinesVisibility="Horizontal" CanUserSortColumns="False"
+                      BorderThickness="1" BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Address" Binding="{Binding Address}" IsReadOnly="True" Width="90" />
+                    <DataGridTextColumn Header="Ref" Binding="{Binding Reference}" IsReadOnly="True" Width="90" />
+                    <DataGridCheckBoxColumn Header="On" Binding="{Binding BitValue}" Width="70"
+                                            IsVisible="{Binding #Root.((vm:MainViewModel)DataContext).SelectedTableIsBits}" />
+                    <DataGridTextColumn Header="Value" Binding="{Binding Value}" Width="120"
+                                        IsVisible="{Binding !#Root.((vm:MainViewModel)DataContext).SelectedTableIsBits}" />
+                    <DataGridTextColumn Header="Hex" Binding="{Binding HexValue}" IsReadOnly="True" Width="*"
+                                        IsVisible="{Binding !#Root.((vm:MainViewModel)DataContext).SelectedTableIsBits}" />
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <GridSplitter Grid.Row="2" Height="6" HorizontalAlignment="Stretch"
+                          ResizeDirection="Rows" Background="Transparent" />
+
+            <Grid Grid.Row="3" RowDefinitions="Auto,*">
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8" Margin="0,0,0,6">
+                    <TextBlock Text="Traffic log" FontWeight="SemiBold" VerticalAlignment="Center" />
+                    <Button Content="Export CSV…" Click="OnExportCsv" Padding="8,3" FontSize="12" />
+                    <Button Content="Clear" Command="{Binding ClearLogCommand}" Padding="8,3" FontSize="12" />
+                </StackPanel>
+                <DataGrid Grid.Row="1" ItemsSource="{Binding Log}" IsReadOnly="True"
+                          FontFamily="Cascadia Mono,Consolas,monospace" FontSize="12"
+                          GridLinesVisibility="Horizontal"
+                          BorderThickness="1" BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Time" Binding="{Binding Time}" Width="110" />
+                        <DataGridTextColumn Header="Dir" Binding="{Binding Direction}" Width="55" />
+                        <DataGridTextColumn Header="Unit" Binding="{Binding Unit}" Width="50" />
+                        <DataGridTextColumn Header="Function" Binding="{Binding Function}" Width="170" />
+                        <DataGridTextColumn Header="Detail" Binding="{Binding Detail}" Width="2*" />
+                        <DataGridTextColumn Header="Raw" Binding="{Binding RawHex}" Width="1*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Grid>
+    </Grid>
+
+    <Window.Styles>
+        <Style Selector="TextBlock.label">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Opacity" Value="0.75" />
+        </Style>
+    </Window.Styles>
+</Window>

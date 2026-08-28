@@ -8,6 +8,12 @@ dist/
 # astro
 .astro/
 
+# .NET (tool-modbus-sim)
+bin/
+obj/
+*.user
+publish/
+
 # environment
 .env
 .env.production

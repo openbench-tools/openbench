@@ -4,8 +4,8 @@ Free, open-source Modbus RTU/TCP slave and master simulator — no license
 key, no telemetry. Built for testing SCADA systems, PLC programs, and
 integrations without touching real hardware.
 
-**Status:** In active development — no release yet. Watch this repo for the
-first build.
+**Status:** In active development — pre-release. The core protocol engine and
+a desktop UI are working; packaged binaries are not published yet.
 
 [Website](https://openbench.dev/tools/modbus-simulator) ·
 [Report an issue](../../issues)
@@ -18,16 +18,50 @@ before a site visit. This does the same job, free, with source available
 for teams whose security policy requires audit-ability before a new tool
 touches an engineering workstation.
 
-## Features (planned for v0.1)
+## Features
 
-- Slave (server) and master (client) simulation modes
-- Configurable holding registers, coils, and discrete inputs
-- Live register read/write log, exportable as CSV
-- Modbus RTU over serial and Modbus TCP in one tool
+- **Slave (server) and master (client)** simulation in one tool
+- **Modbus TCP** and **Modbus RTU over serial**
+- Configurable holding registers, input registers, coils, and discrete
+  inputs across the full 0–65535 address space
+- Editable register grid — change a value and connected clients see it; run
+  as master and the grid mirrors a live device
+- Live read/write traffic log with raw ADU bytes, exportable as CSV
+- Function codes 0x01–0x06, 0x0F, 0x10, with correct exception responses
+- No license key, no telemetry, no network calls of its own
+
+## Project layout
+
+```
+tool-modbus-sim/
+  src/
+    ModbusSim.Core/     protocol engine — framing, PDU codec, slave/master
+                        runtime, data store, CSV log (no UI dependencies)
+    ModbusSim.App/      Avalonia desktop UI (MVVM)
+  tests/
+    ModbusSim.Core.Tests/   xUnit — protocol, framing, TCP loopback
+  ModbusSim.slnx
+```
 
 ## Building from source
 
-_Build instructions will be added once the initial implementation lands._
+Requires the [.NET 10 SDK](https://dotnet.microsoft.com/download).
+
+```
+dotnet build ModbusSim.slnx -c Release
+dotnet test  ModbusSim.slnx
+dotnet run   --project src/ModbusSim.App -c Release
+```
+
+A self-contained single-file Windows build:
+
+```
+dotnet publish src/ModbusSim.App -c Release -r win-x64 \
+  -p:PublishSingleFile=true --self-contained
+```
+
+The `ModbusSim.Core` library targets any .NET 10 platform; the serial
+transport uses `System.IO.Ports` (Windows and Linux).
 
 ## License
 
