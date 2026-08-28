@@ -53,12 +53,14 @@ dotnet test  ModbusSim.slnx
 dotnet run   --project src/ModbusSim.App -c Release
 ```
 
-A self-contained single-file Windows build:
+A self-contained single-file Windows build (single ~50 MB `.exe`, no runtime
+install needed — the single-file knobs are already set in the `.csproj`):
 
 ```
-dotnet publish src/ModbusSim.App -c Release -r win-x64 \
-  -p:PublishSingleFile=true --self-contained
+dotnet publish src/ModbusSim.App -c Release -r win-x64 -o publish/win-x64
 ```
+
+Swap `-r linux-x64` for a Linux build.
 
 The `ModbusSim.Core` library targets any .NET 10 platform; the serial
 transport uses `System.IO.Ports` (Windows and Linux).

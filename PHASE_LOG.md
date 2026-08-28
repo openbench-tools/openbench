@@ -51,9 +51,17 @@ live traffic log `DataGrid` with CSV export. Builds and runs.
 slave engine behaviour, framing, and 3 real-socket TCP loopback integration
 tests (master↔slave read, write, exception). All green.
 
+**Single-file Windows binary:** `dotnet publish -r win-x64` now produces one
+self-contained ~50 MB `.exe` (compression + native-lib self-extract on;
+Skia/HarfBuzz `.pdb`s trimmed by an `AfterTargets="Publish"` target; knobs
+live in `ModbusSim.App.csproj` under a `RuntimeIdentifier != ''` condition so
+plain build/test is unaffected). Built `OpenBench-ModbusSimulator-0.1.0-win-x64.exe`
++ `SHA256SUMS.txt` locally under `publish/win-x64/` (gitignored); smoke-tested
+(launches). No GitHub Release yet — no repo/remote exists.
+
 **Not done yet:**
 - Screenshot / GIF of the app for the tool page.
-- `dotnet publish` single-file binaries + GitHub Release + checksums.
+- Create GitHub org + repos, push, cut the actual Release with the binary.
 - Flip `marketing-site` tool entry from `coming-soon` to `live` + download URL.
 - Serial (RTU) path is untested against real hardware — no COM port here.
 - Docs page (install + usage).

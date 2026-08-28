@@ -4,7 +4,30 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AssemblyTitle>OpenBench Modbus Simulator</AssemblyTitle>
+    <Product>OpenBench Modbus Simulator</Product>
   </PropertyGroup>
+
+  <!-- single-file publish knobs — active only when a RuntimeIdentifier is given,
+       so plain `dotnet build` / `dotnet test` are unaffected.
+       `dotnet publish src/ModbusSim.App -c Release -r win-x64` is then enough. -->
+  <PropertyGroup Condition="'$(RuntimeIdentifier)' != ''">
+    <PublishSingleFile>true</PublishSingleFile>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <SelfContained>true</SelfContained>
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+
+  <!-- The Skia / HarfBuzz NuGet packages ship ~100 MB of native .pdb files that
+       otherwise land next to the exe; drop them from the publish output. -->
+  <Target Name="TrimNativePdbs" AfterTargets="Publish">
+    <ItemGroup>
+      <_NativePdb Include="$(PublishDir)*.pdb" />
+    </ItemGroup>
+    <Delete Files="@(_NativePdb)" />
+  </Target>
 
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
