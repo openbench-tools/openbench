@@ -76,13 +76,22 @@ plain build/test is unaffected). Built `OpenBench-ModbusSimulator-0.1.0-win-x64.
   running as a TCP slave with a populated register table + live traffic log.
   Rendered as a band under the tool-page hero; also in the JSON-LD.
 
+- **Deployed** to **Cloudflare Pages** (Vercel account was flagged): project
+  `openbench`, root dir `marketing-site`, build `npm run build` → `dist`,
+  auto-deploys on push to `main`. Live at **https://openbench-3ub.pages.dev**.
+  All 6 routes 200; download button, screenshot, JSON-LD, sitemap, robots all
+  verified on the deployed site. `astro.config` `site:` still points at
+  `https://openbench.dev` (correct once the domain is attached; canonical /
+  OG / sitemap URLs use it in the meantime).
+
 **Not done yet:**
+- Register `openbench.dev` + attach it to the Pages project (Cloudflare
+  Registrar — same dashboard).
+- Plausible (or Umami) account → then uncomment the analytics line in
+  `BaseLayout.astro`.
+- Validate structured data in Google's Rich Results Test (needs a stable URL;
+  can run against the pages.dev URL now).
 - GIF / short demo video (still just the one static screenshot).
-- Deploy `marketing-site` (Vercel) + register domain + Plausible account.
 - Serial (RTU) path is untested against real hardware — no COM port here.
 - Blog / release-notes post (Phase 2).
 - `.exe` is not code-signed (SmartScreen warning on first run).
-
-**Phase 0 leftovers (unchanged):**
-- Real domain registration, hosting deployment, Plausible account.
-- GitHub org/repos actually created and pushed (local only so far).
