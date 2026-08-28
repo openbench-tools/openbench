@@ -72,8 +72,12 @@ plain build/test is unaffected). Built `OpenBench-ModbusSimulator-0.1.0-win-x64.
   `ToolLayout` JSON-LD gained `softwareVersion` / `datePublished` /
   `downloadUrl` / `license`.
 
+- **App screenshot** captured (`public/screenshots/modbus-simulator.png`) —
+  running as a TCP slave with a populated register table + live traffic log.
+  Rendered as a band under the tool-page hero; also in the JSON-LD.
+
 **Not done yet:**
-- Screenshot / GIF of the app for the tool page (still text-only).
+- GIF / short demo video (still just the one static screenshot).
 - Deploy `marketing-site` (Vercel) + register domain + Plausible account.
 - Serial (RTU) path is untested against real hardware — no COM port here.
 - Blog / release-notes post (Phase 2).
