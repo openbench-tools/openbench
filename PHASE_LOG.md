@@ -106,11 +106,21 @@ plain build/test is unaffected). Built `OpenBench-ModbusSimulator-0.1.0-win-x64.
   `migrations/0001_pro_interest.sql`, bind it as `DB` on the Pages project
   (steps in `marketing-site/functions/README.md`).
 
+- **Plausible custom events wired** (commit `b9299be`): `BaseLayout` has a
+  queue shim + a conditional script that loads only when
+  `PUBLIC_PLAUSIBLE_DOMAIN` is set in the host env. The click-delegation
+  script reads `data-event` + `data-tool` + any `data-prop-*`. Events:
+  `download_click`, `releases_click`, `docs_click`, `source_click` (all carry
+  the tool slug), `donate_click` (carries `provider` + `context`),
+  `pro_interest` (from the form). `src/env.d.ts` types `window.plausible`;
+  `.env.example` documents the var. **To turn on:** create a Plausible (or
+  Umami) account for `openbench.dev`, then set `PUBLIC_PLAUSIBLE_DOMAIN` in
+  Cloudflare Pages → Settings → Variables and redeploy.
+
 **Not done yet:**
 - Create the D1 database + `DB` binding to activate the email capture.
-- Plausible custom events on the `data-event` hooks (download / donate / docs
-  / source clicks) — needs the Plausible account/script. The `pro_interest`
-  event is already wired in the form.
+- Create a Plausible/Umami account + set `PUBLIC_PLAUSIBLE_DOMAIN` to turn
+  analytics on (all the event wiring is done).
 - Directory / community submissions (r/PLC, r/embedded, AlternativeTo, PH).
 - Register `openbench.dev` + attach it to the Pages project (Cloudflare
   Registrar — same dashboard).
