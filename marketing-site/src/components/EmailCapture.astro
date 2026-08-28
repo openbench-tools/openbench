@@ -1,0 +1,116 @@
+---
+interface Props {
+  tool?: string;
+  heading?: string;
+  blurb?: string;
+}
+
+const {
+  tool = '',
+  heading = 'Would you use a hosted / team version?',
+  blurb =
+    "The desktop tool is free forever. Some teams have asked about remote device " +
+    "monitoring, shared dashboards, and alerting — a paid tier that the free, " +
+    "local-only tool doesn't cover. Nothing's built yet. Leave your email and " +
+    "we'll get in touch if it happens. No spam, no commitment.",
+} = Astro.props;
+---
+
+<section class="border-y border-[var(--ob-paper-line)]">
+  <div class="mx-auto max-w-5xl px-6 py-12">
+    <h2 class="font-display text-xl font-600">{heading}</h2>
+    <p class="mt-2 max-w-2xl text-sm text-[var(--ob-ink)]/75">{blurb}</p>
+
+    <form id="pro-interest" class="mt-5 max-w-xl" action="/api/notify" method="post" novalidate>
+      <input type="hidden" name="tool" value={tool} />
+      {/* honeypot — hidden from users, bait for bots */}
+      <input
+        type="text"
+        name="company"
+        tabindex="-1"
+        autocomplete="off"
+        aria-hidden="true"
+        style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden"
+      />
+      <div class="flex flex-wrap gap-3">
+        <label class="sr-only" for="pro-interest-email">Email address</label>
+        <input
+          id="pro-interest-email"
+          type="email"
+          name="email"
+          required
+          autocomplete="email"
+          placeholder="you@company.com"
+          class="min-w-[16rem] flex-1 rounded border border-[var(--ob-paper-line)] bg-white px-3 py-2 font-mono text-sm"
+        />
+        <button
+          type="submit"
+          class="rounded bg-[var(--ob-blueprint-800)] px-5 py-2 font-mono text-sm text-white hover:bg-[var(--ob-blueprint-600)]"
+        >
+          Notify me
+        </button>
+      </div>
+      <p id="pro-interest-msg" class="mt-2 font-mono text-xs" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+
+<style>
+  #pro-interest-msg[data-state='pending'] { color: color-mix(in srgb, var(--ob-ink) 55%, transparent); }
+  #pro-interest-msg[data-state='error'] { color: var(--ob-amber-dim); }
+  #pro-interest-msg[data-state='ok'] { color: var(--ob-green-ok); }
+</style>
+
+<script>
+  const form = document.getElementById('pro-interest') as HTMLFormElement | null;
+  const msg = document.getElementById('pro-interest-msg');
+
+  function setMsg(text: string, state: 'pending' | 'error' | 'ok') {
+    if (!msg) return;
+    msg.textContent = text;
+    msg.dataset.state = state;
+  }
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!form) return;
+
+    const data = new FormData(form);
+    const email = String(data.get('email') ?? '').trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setMsg('Enter a valid email address.', 'error');
+      return;
+    }
+
+    const button = form.querySelector('button');
+    if (button) button.disabled = true;
+    setMsg('Sending…', 'pending');
+
+    try {
+      const res = await fetch('/api/notify', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          tool: String(data.get('tool') ?? ''),
+        }),
+      });
+      const out = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+
+      if (res.ok && out.ok) {
+        form.reset();
+        setMsg("Thanks — we'll be in touch.", 'ok');
+        // @ts-ignore — plausible is injected by the analytics script
+        if (window.plausible) window.plausible('pro_interest', { props: { tool: String(data.get('tool') ?? '') } });
+      } else if (out.error === 'not_configured') {
+        setMsg("Signups aren't live yet — check back soon.", 'error');
+      } else {
+        setMsg('Something went wrong. Try again in a moment.', 'error');
+      }
+    } catch {
+      setMsg('Network error. Try again in a moment.', 'error');
+    } finally {
+      if (button) button.disabled = false;
+    }
+  });
+</script>

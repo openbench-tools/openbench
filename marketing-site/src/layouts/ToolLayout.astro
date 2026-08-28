@@ -2,6 +2,7 @@
 import BaseLayout from './BaseLayout.astro';
 import DownloadButton from '../components/DownloadButton.astro';
 import DonateWidget from '../components/DonateWidget.astro';
+import EmailCapture from '../components/EmailCapture.astro';
 
 interface Props {
   name: string;
@@ -142,4 +143,6 @@ const jsonLd = {
       </div>
     </div>
   </section>
+
+  <EmailCapture tool={slug} />
 </BaseLayout>
