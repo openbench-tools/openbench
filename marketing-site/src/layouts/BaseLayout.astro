@@ -22,6 +22,7 @@ const { title, description } = Astro.props;
     <meta property="og:type" content="website" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <link rel="alternate" type="application/rss+xml" title="OpenBench" href="/rss.xml" />
     <!-- Analytics: replace with your Plausible/Umami domain once deployed -->
     <!-- <script defer data-domain="openbench.dev" src="https://plausible.io/js/script.js"></script> -->
   </head>

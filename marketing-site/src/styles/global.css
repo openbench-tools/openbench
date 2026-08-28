@@ -88,3 +88,70 @@ button:focus-visible {
   outline: 2px solid var(--ob-amber);
   outline-offset: 2px;
 }
+
+/* Long-form markdown content (blog posts, tool overviews) */
+.prose-ob {
+  line-height: 1.7;
+}
+.prose-ob > * + * {
+  margin-top: 1.1em;
+}
+.prose-ob h2 {
+  font-family: var(--ob-font-display);
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin-top: 2em;
+  margin-bottom: 0.2em;
+}
+.prose-ob h3 {
+  font-family: var(--ob-font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 1.6em;
+}
+.prose-ob a {
+  color: var(--ob-amber-dim);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.prose-ob a:hover {
+  color: var(--ob-amber);
+}
+.prose-ob ul,
+.prose-ob ol {
+  padding-left: 1.4em;
+}
+.prose-ob ul {
+  list-style: disc;
+}
+.prose-ob ol {
+  list-style: decimal;
+}
+.prose-ob li + li {
+  margin-top: 0.35em;
+}
+.prose-ob code {
+  background: var(--ob-blueprint-900);
+  color: var(--ob-blueprint-300);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+.prose-ob pre {
+  background: var(--ob-blueprint-900);
+  color: var(--ob-blueprint-300);
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-size: 0.85em;
+}
+.prose-ob pre code {
+  background: none;
+  padding: 0;
+}
+.prose-ob blockquote {
+  border-left: 3px solid var(--ob-amber-dim);
+  padding-left: 1em;
+  color: var(--ob-ink);
+  opacity: 0.8;
+}

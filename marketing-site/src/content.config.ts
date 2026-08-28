@@ -22,4 +22,17 @@ const tools = defineCollection({
   }),
 });
 
-export const collections = { tools };
+const blog = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    pubDate: z.date(),
+    updatedDate: z.date().optional(),
+    tags: z.array(z.string()).default([]),
+    tool: z.string().optional(), // slug of a related tool, e.g. "modbus-simulator"
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { tools, blog };

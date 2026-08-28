@@ -1,0 +1,44 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  updatedDate?: Date;
+  tags: string[];
+  toolSlug?: string;
+  toolName?: string;
+}
+
+const { title, description, pubDate, updatedDate, tags, toolSlug, toolName } = Astro.props;
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="mx-auto max-w-2xl px-6 py-16">
+    <p class="font-mono text-xs uppercase tracking-widest text-[var(--ob-amber-dim)]">
+      <a href="/blog" class="hover:text-[var(--ob-amber)]">Blog</a>
+      {tags.includes('release') && ' · Release notes'}
+    </p>
+    <h1 class="mt-3 font-display text-3xl font-700 leading-tight">{title}</h1>
+    <p class="mt-3 font-mono text-sm text-[var(--ob-ink)]/60">
+      <time datetime={pubDate.toISOString()}>{fmt(pubDate)}</time>
+      {updatedDate && <span> · updated {fmt(updatedDate)}</span>}
+      {toolSlug && (
+        <span> · <a href={`/tools/${toolSlug}`} class="text-[var(--ob-amber-dim)] hover:text-[var(--ob-amber)]">{toolName ?? toolSlug}</a></span>
+      )}
+    </p>
+
+    <div class="prose-ob mt-10 text-[var(--ob-ink)]/85">
+      <slot />
+    </div>
+
+    <hr class="my-12 border-[var(--ob-paper-line)]" />
+    <p class="font-mono text-sm text-[var(--ob-ink)]/60">
+      <a href="/blog" class="hover:text-[var(--ob-amber-dim)]">← All posts</a>
+    </p>
+  </article>
+</BaseLayout>
