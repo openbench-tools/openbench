@@ -7,7 +7,9 @@ description: >
   device. Built by a test & automation engineer who needed this on the bench
   every week and got tired of licensing friction for a tool this simple.
 category: "engineering"
-status: "coming-soon"
+status: "live"
+version: "0.1.0"
+releaseDate: 2026-08-28
 protocol: "Modbus RTU / Modbus TCP"
 features:
   - "Slave (server) and master (client) simulation modes"
@@ -20,6 +22,7 @@ requirements:
   - "A serial port or virtual COM port for RTU mode"
 sourceUrl: "https://github.com/openbench-tools/openbench"
 docsUrl: "/tools/modbus-simulator/docs"
+downloadUrl: "https://github.com/openbench-tools/openbench/releases/latest"
 ---
 
 ## Why this exists

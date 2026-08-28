@@ -13,6 +13,9 @@ interface Props {
   requirements: string[];
   sourceUrl: string;
   docsUrl?: string;
+  downloadUrl?: string;
+  version?: string;
+  releaseDate?: Date;
   slug: string;
 }
 
@@ -26,6 +29,9 @@ const {
   requirements,
   sourceUrl,
   docsUrl,
+  downloadUrl,
+  version,
+  releaseDate,
   slug,
 } = Astro.props;
 
@@ -34,8 +40,12 @@ const jsonLd = {
   '@type': 'SoftwareApplication',
   name,
   applicationCategory: 'DeveloperApplication',
-  operatingSystem: 'Windows',
+  operatingSystem: 'Windows 10, Windows 11',
   description,
+  ...(version ? { softwareVersion: version } : {}),
+  ...(releaseDate ? { datePublished: releaseDate.toISOString().slice(0, 10) } : {}),
+  ...(status === 'live' ? { downloadUrl: downloadUrl ?? `${sourceUrl}/releases/latest` } : {}),
+  license: `${sourceUrl}/blob/main/tool-modbus-sim/LICENSE`,
   offers: {
     '@type': 'Offer',
     price: '0',
@@ -56,7 +66,7 @@ const jsonLd = {
       <h1 class="mt-3 font-display text-4xl font-700 sm:text-5xl">{name}</h1>
       <p class="mt-4 max-w-2xl text-lg text-[var(--ob-blueprint-300)]">{tagline}</p>
       <div class="mt-8 flex flex-wrap items-center gap-4">
-        <DownloadButton sourceUrl={sourceUrl} status={status} toolName={slug} />
+        <DownloadButton sourceUrl={sourceUrl} status={status} toolName={slug} downloadUrl={downloadUrl} />
         <a
           href={sourceUrl}
           data-event="source_click"

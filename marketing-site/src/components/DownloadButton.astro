@@ -3,20 +3,56 @@ interface Props {
   sourceUrl: string;
   status: 'live' | 'coming-soon';
   toolName: string;
+  downloadUrl?: string;
 }
-const { sourceUrl, status, toolName } = Astro.props;
-const releasesUrl = `${sourceUrl}/releases/latest`;
+const { sourceUrl, status, toolName, downloadUrl } = Astro.props;
+
+const releasesPage = `${sourceUrl}/releases/latest`;
+
+// Resolve the actual asset at build time from the GitHub Releases API, with a
+// static fallback to the releases page if that fetch fails (offline, rate limit).
+let href = downloadUrl ?? releasesPage;
+let meta = '';
+
+if (status === 'live') {
+  const repo = sourceUrl.match(/github\.com\/([^/]+)\/([^/]+?)(?:\.git)?$/);
+  if (repo) {
+    try {
+      const res = await fetch(
+        `https://api.github.com/repos/${repo[1]}/${repo[2]}/releases/latest`,
+        { headers: { Accept: 'application/vnd.github+json' } },
+      );
+      if (res.ok) {
+        const data = await res.json();
+        const asset = (data.assets ?? []).find((a: any) => a.name.endsWith('.exe'));
+        if (asset) {
+          href = asset.browser_download_url;
+          const mb = (asset.size / 1_048_576).toFixed(0);
+          meta = `${data.tag_name} · ${mb} MB · Windows x64`;
+        }
+      }
+    } catch {
+      /* keep fallback href */
+    }
+  }
+}
 ---
 
 {status === 'live' ? (
-  <a
-    href={releasesUrl}
-    data-event="download_click"
-    data-tool={toolName}
-    class="inline-flex items-center gap-2 rounded bg-[var(--ob-amber)] px-5 py-3 font-mono text-sm font-500 text-[var(--ob-blueprint-900)] hover:bg-[var(--ob-amber-dim)]"
-  >
-    ↓ Download latest release
-  </a>
+  <div class="flex flex-col gap-1">
+    <a
+      href={href}
+      data-event="download_click"
+      data-tool={toolName}
+      class="inline-flex items-center gap-2 rounded bg-[var(--ob-amber)] px-5 py-3 font-mono text-sm font-500 text-[var(--ob-blueprint-900)] hover:bg-[var(--ob-amber-dim)]"
+    >
+      ↓ Download for Windows
+    </a>
+    <span class="font-mono text-xs text-[var(--ob-blueprint-300)]">
+      {meta || 'Latest release'} ·{' '}
+      <a href={releasesPage} class="underline hover:text-white">all releases</a>
+    </span>
+  </div>
 ) : (
   <span
     class="inline-flex items-center gap-2 rounded border border-dashed border-[var(--ob-ink)]/40 px-5 py-3 font-mono text-sm text-[var(--ob-ink)]/60"

@@ -59,12 +59,25 @@ plain build/test is unaffected). Built `OpenBench-ModbusSimulator-0.1.0-win-x64.
 + `SHA256SUMS.txt` locally under `publish/win-x64/` (gitignored); smoke-tested
 (launches). No GitHub Release yet — no repo/remote exists.
 
+**Shipped:**
+- GitHub: org `openbench-tools`, repo `openbench-tools/openbench` (monorepo,
+  both folders). Pushed.
+- **Release `v0.1.0`** cut with `OpenBench-ModbusSimulator-0.1.0-win-x64.exe`
+  + `SHA256SUMS.txt`.
+- Docs page live at `/tools/modbus-simulator/docs` (install, TCP/RTU quick
+  starts, register table, traffic log, troubleshooting, build).
+- Tool entry flipped to `status: live`, `version: 0.1.0`. `DownloadButton`
+  now resolves the actual `.exe` asset from the GitHub Releases API at build
+  time (static fallback to the releases page), shows version + size.
+  `ToolLayout` JSON-LD gained `softwareVersion` / `datePublished` /
+  `downloadUrl` / `license`.
+
 **Not done yet:**
-- Screenshot / GIF of the app for the tool page.
-- Create GitHub org + repos, push, cut the actual Release with the binary.
-- Flip `marketing-site` tool entry from `coming-soon` to `live` + download URL.
+- Screenshot / GIF of the app for the tool page (still text-only).
+- Deploy `marketing-site` (Vercel) + register domain + Plausible account.
 - Serial (RTU) path is untested against real hardware — no COM port here.
-- Docs page (install + usage).
+- Blog / release-notes post (Phase 2).
+- `.exe` is not code-signed (SmartScreen warning on first run).
 
 **Phase 0 leftovers (unchanged):**
 - Real domain registration, hosting deployment, Plausible account.
