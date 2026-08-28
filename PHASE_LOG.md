@@ -13,9 +13,14 @@
 - `tool-modbus-sim/` repo skeleton created: MIT `LICENSE`, `README.md` template (reusable pattern for future tool repos).
 - Build verified locally (`npm run build` succeeds, 5 static pages generated).
 
+**Session 2 additions:**
+- `@astrojs/sitemap` integration added; build emits `sitemap-index.xml` + `sitemap-0.xml` (all 5 pages).
+- `public/robots.txt` added (`Allow: /`, points at `https://openbench.dev/sitemap-index.xml`).
+- Git repo initialized at project root (`main` branch) with `.gitignore` (node_modules, dist, .astro, *.zip) and `.gitattributes` (eol=lf). First commit made.
+- `npm install` run; `node_modules/` now present locally.
+
 **Not done yet (next session):**
-- Actual Modbus simulator application code (still zero — this session only built the marketing site and repo skeleton).
+- Actual Modbus simulator application code (still zero — only the marketing site and repo skeleton exist).
 - Real domain registration, hosting deployment (Vercel/Cloudflare Pages), Plausible account.
 - Screenshots/GIFs for the tool page (currently text-only).
-- `sitemap.xml` / `robots.txt` generation.
-- GitHub org/repos actually created and pushed (built locally only so far).
+- GitHub org/repos actually created and pushed (local only so far).
