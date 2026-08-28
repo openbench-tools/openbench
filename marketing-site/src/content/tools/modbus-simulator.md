@@ -18,7 +18,7 @@ features:
 requirements:
   - "Windows 10/11 (Linux build planned post-launch)"
   - "A serial port or virtual COM port for RTU mode"
-sourceUrl: "https://github.com/openbench/tool-modbus-sim"
+sourceUrl: "https://github.com/openbench-tools/openbench"
 ---
 
 ## Why this exists
