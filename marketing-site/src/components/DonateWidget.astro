@@ -1,0 +1,28 @@
+---
+interface Props {
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+---
+
+<div class:list={["flex flex-wrap items-center gap-3", compact ? "" : "rounded-md border border-[var(--ob-paper-line)] p-5"]}>
+  {!compact && (
+    <p class="w-full font-mono text-xs text-[var(--ob-ink)]/70 mb-1">
+      Free doesn't mean the work is free to make — if a tool saves you time, consider chipping in.
+    </p>
+  )}
+  <a
+    href="https://ko-fi.com/openbench"
+    data-event="donate_click"
+    class="inline-flex items-center gap-2 rounded border border-[var(--ob-ink)] px-4 py-2 font-mono text-sm hover:border-[var(--ob-amber-dim)] hover:text-[var(--ob-amber-dim)]"
+  >
+    ☕ Buy me a coffee
+  </a>
+  <a
+    href="https://github.com/sponsors/openbench"
+    data-event="donate_click"
+    class="inline-flex items-center gap-2 rounded border border-[var(--ob-ink)] px-4 py-2 font-mono text-sm hover:border-[var(--ob-amber-dim)] hover:text-[var(--ob-amber-dim)]"
+  >
+    ★ GitHub Sponsors
+  </a>
+</div>

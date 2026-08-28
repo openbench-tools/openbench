@@ -1,0 +1,27 @@
+---
+interface Props {
+  sourceUrl: string;
+  status: 'live' | 'coming-soon';
+  toolName: string;
+}
+const { sourceUrl, status, toolName } = Astro.props;
+const releasesUrl = `${sourceUrl}/releases/latest`;
+---
+
+{status === 'live' ? (
+  <a
+    href={releasesUrl}
+    data-event="download_click"
+    data-tool={toolName}
+    class="inline-flex items-center gap-2 rounded bg-[var(--ob-amber)] px-5 py-3 font-mono text-sm font-500 text-[var(--ob-blueprint-900)] hover:bg-[var(--ob-amber-dim)]"
+  >
+    ↓ Download latest release
+  </a>
+) : (
+  <span
+    class="inline-flex items-center gap-2 rounded border border-dashed border-[var(--ob-ink)]/40 px-5 py-3 font-mono text-sm text-[var(--ob-ink)]/60"
+    title="In active development — watch the GitHub repo for the first release"
+  >
+    Coming soon — follow progress on GitHub
+  </span>
+)}

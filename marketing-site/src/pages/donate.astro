@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import DonateWidget from '../components/DonateWidget.astro';
+---
+
+<BaseLayout
+  title="Support OpenBench"
+  description="How to support OpenBench's free, open-source engineering tools."
+>
+  <section class="mx-auto max-w-2xl px-6 py-16">
+    <h1 class="font-display text-3xl font-700">Support the work</h1>
+    <p class="mt-4 text-[var(--ob-ink)]/85">
+      Every OpenBench tool stays free and open source — support is never
+      required to use them. If a tool saved you a support ticket, a site
+      visit, or a licensing headache, a donation helps keep development
+      going.
+    </p>
+    <div class="mt-8">
+      <DonateWidget />
+    </div>
+  </section>
+</BaseLayout>

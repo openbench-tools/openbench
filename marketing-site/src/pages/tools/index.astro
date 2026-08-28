@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ToolCard from '../../components/ToolCard.astro';
+import { getCollection } from 'astro:content';
+
+const tools = await getCollection('tools');
+---
+
+<BaseLayout
+  title="Tools"
+  description="Free, open-source engineering utilities from OpenBench."
+>
+  <section class="mx-auto max-w-5xl px-6 py-16">
+    <h1 class="font-display text-3xl font-700">Tools</h1>
+    <p class="mt-3 max-w-xl text-[var(--ob-ink)]/75">
+      Free, source-available utilities for the test bench. Wave 1 starts
+      with one tool, built properly, before the next is added.
+    </p>
+    <div class="mt-10 grid gap-5 sm:grid-cols-2">
+      {tools.map((tool) => (
+        <ToolCard
+          slug={tool.id}
+          name={tool.data.name}
+          tagline={tool.data.tagline}
+          protocol={tool.data.protocol}
+          status={tool.data.status}
+        />
+      ))}
+    </div>
+  </section>
+</BaseLayout>

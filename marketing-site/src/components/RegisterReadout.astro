@@ -1,0 +1,55 @@
+---
+// A simulated Modbus register-poll log, styled like an instrument readout.
+// This is the page's signature element: it shows the actual thing the tool
+// does (polling registers) rather than an abstract graphic, which is more
+// credible to an engineering audience evaluating whether the tool is real.
+---
+
+<div class="rounded-md border border-[var(--ob-blueprint-600)] bg-[var(--ob-blueprint-900)] font-mono text-sm overflow-hidden">
+  <div class="flex items-center gap-2 border-b border-[var(--ob-blueprint-600)] px-4 py-2 text-[var(--ob-blueprint-300)]">
+    <span class="h-2 w-2 rounded-full bg-[var(--ob-green-ok)]" aria-hidden="true"></span>
+    <span>modbus-sim — TCP:502 — slave id 1</span>
+  </div>
+  <pre id="ob-readout" class="m-0 px-4 py-4 leading-relaxed text-[var(--ob-blueprint-300)]" aria-label="Simulated Modbus register poll output"></pre>
+</div>
+
+<script>
+  const lines = [
+    { addr: '40001', label: 'holding_reg', value: () => (Math.random() * 100).toFixed(1) + ' °C' },
+    { addr: '40002', label: 'holding_reg', value: () => (200 + Math.random() * 10).toFixed(0) + ' rpm' },
+    { addr: '00001', label: 'coil', value: () => (Math.random() > 0.5 ? 'ON' : 'OFF') },
+    { addr: '10001', label: 'discrete_in', value: () => (Math.random() > 0.2 ? '1' : '0') },
+  ];
+
+  const el = document.getElementById('ob-readout');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function pad(str: string, len: number) {
+    return str.padEnd(len, ' ');
+  }
+
+  function renderStatic() {
+    if (!el) return;
+    el.textContent = lines
+      .map((l) => `[READ] ${pad(l.addr, 7)} ${pad(l.label, 12)} ${l.value()}`)
+      .join('\n');
+  }
+
+  if (reduceMotion || !el) {
+    renderStatic();
+  } else {
+    let i = 0;
+    const rendered: string[] = [];
+    const timer = setInterval(() => {
+      const l = lines[i % lines.length];
+      const line = `[READ] ${pad(l.addr, 7)} ${pad(l.label, 12)} ${l.value()}`;
+      rendered.push(line);
+      if (rendered.length > 6) rendered.shift();
+      el.textContent = rendered.join('\n');
+      i++;
+    }, 900);
+
+    // Stop after a while so it doesn't run forever in a background tab
+    setTimeout(() => clearInterval(timer), 60_000);
+  }
+</script>

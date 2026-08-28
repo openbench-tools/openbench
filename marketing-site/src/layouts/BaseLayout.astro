@@ -1,0 +1,47 @@
+---
+import SiteNav from '../components/SiteNav.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+}
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} — OpenBench</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={`${title} — OpenBench`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <!-- Analytics: replace with your Plausible/Umami domain once deployed -->
+    <!-- <script defer data-domain="openbench.dev" src="https://plausible.io/js/script.js"></script> -->
+  </head>
+  <body>
+    <SiteNav />
+    <main>
+      <slot />
+    </main>
+    <SiteFooter />
+    <script>
+      // Fires a Plausible custom event for any element with data-event.
+      // Safe no-op if Plausible isn't loaded yet (e.g. in local dev).
+      document.addEventListener('click', (e) => {
+        const target = (e.target as HTMLElement)?.closest('[data-event]') as HTMLElement | null;
+        if (!target) return;
+        const event = target.dataset.event;
+        const tool = target.dataset.tool;
+        // @ts-ignore — plausible is injected by the analytics script tag above
+        if (event && window.plausible) window.plausible(event, { props: tool ? { tool } : undefined });
+      });
+    </script>
+  </body>
+</html>

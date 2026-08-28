@@ -1,0 +1,115 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import DownloadButton from '../components/DownloadButton.astro';
+import DonateWidget from '../components/DonateWidget.astro';
+
+interface Props {
+  name: string;
+  tagline: string;
+  description: string;
+  status: 'live' | 'coming-soon';
+  protocol?: string;
+  features: string[];
+  requirements: string[];
+  sourceUrl: string;
+  docsUrl?: string;
+  slug: string;
+}
+
+const {
+  name,
+  tagline,
+  description,
+  status,
+  protocol,
+  features,
+  requirements,
+  sourceUrl,
+  docsUrl,
+  slug,
+} = Astro.props;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name,
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Windows',
+  description,
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+  },
+};
+---
+
+<BaseLayout title={name} description={tagline}>
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  <section class="blueprint-hero relative overflow-hidden bg-[var(--ob-blueprint-800)] py-16 text-white">
+    <div class="blueprint-grid pointer-events-none absolute inset-0"></div>
+    <div class="relative mx-auto max-w-5xl px-6">
+      <p class="font-mono text-xs uppercase tracking-widest text-[var(--ob-blueprint-300)]">
+        {protocol ?? 'OpenBench tool'}
+      </p>
+      <h1 class="mt-3 font-display text-4xl font-700 sm:text-5xl">{name}</h1>
+      <p class="mt-4 max-w-2xl text-lg text-[var(--ob-blueprint-300)]">{tagline}</p>
+      <div class="mt-8 flex flex-wrap items-center gap-4">
+        <DownloadButton sourceUrl={sourceUrl} status={status} toolName={slug} />
+        <a
+          href={sourceUrl}
+          data-event="source_click"
+          class="font-mono text-sm text-[var(--ob-blueprint-300)] hover:text-white"
+        >
+          View source →
+        </a>
+        {docsUrl && (
+          <a href={docsUrl} class="font-mono text-sm text-[var(--ob-blueprint-300)] hover:text-white">
+            Docs →
+          </a>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-5xl px-6 py-14">
+    <div class="grid gap-12 sm:grid-cols-[1.4fr_1fr]">
+      <div>
+        <h2 class="font-display text-xl font-600">Overview</h2>
+        <div class="prose-ob mt-4 text-[var(--ob-ink)]/85">
+          <slot />
+        </div>
+      </div>
+
+      <div class="space-y-8">
+        <div>
+          <h2 class="font-display text-sm font-600 uppercase tracking-wide text-[var(--ob-ink)]/60">
+            Spec sheet
+          </h2>
+          <dl class="mt-3 divide-y divide-[var(--ob-paper-line)] border-y border-[var(--ob-paper-line)] font-mono text-sm">
+            {features.map((f) => (
+              <div class="flex gap-4 py-2">
+                <dt class="text-[var(--ob-amber-dim)]">▸</dt>
+                <dd>{f}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+
+        <div>
+          <h2 class="font-display text-sm font-600 uppercase tracking-wide text-[var(--ob-ink)]/60">
+            Requirements
+          </h2>
+          <ul class="mt-3 space-y-1 font-mono text-sm text-[var(--ob-ink)]/80">
+            {requirements.map((r) => (
+              <li>— {r}</li>
+            ))}
+          </ul>
+        </div>
+
+        <DonateWidget />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

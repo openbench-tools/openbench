@@ -1,0 +1,91 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RegisterReadout from '../components/RegisterReadout.astro';
+import ToolCard from '../components/ToolCard.astro';
+import { getCollection } from 'astro:content';
+
+const tools = await getCollection('tools');
+---
+
+<BaseLayout
+  title="Open-source tools for the test bench"
+  description="OpenBench builds free, open-source engineering utilities — starting with a Modbus simulator — for test and automation engineers, no license key required."
+>
+  <section class="relative overflow-hidden bg-[var(--ob-blueprint-800)] py-20 text-white">
+    <div class="blueprint-grid pointer-events-none absolute inset-0"></div>
+    <div class="relative mx-auto grid max-w-5xl gap-12 px-6 sm:grid-cols-2 sm:items-center">
+      <div>
+        <p class="font-mono text-xs uppercase tracking-widest text-[var(--ob-blueprint-300)]">
+          Free &amp; open source
+        </p>
+        <h1 class="mt-3 font-display text-4xl font-700 leading-tight sm:text-5xl">
+          Tools for the test bench, built by someone who's on it.
+        </h1>
+        <p class="mt-5 max-w-md text-[var(--ob-blueprint-300)]">
+          OpenBench makes free, source-available utilities for test and
+          automation engineers — no license key, no telemetry, no
+          procurement cycle. First up: a Modbus simulator.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-4">
+          <a
+            href="/tools/modbus-simulator"
+            class="rounded bg-[var(--ob-amber)] px-5 py-3 font-mono text-sm font-500 text-[var(--ob-blueprint-900)] hover:bg-[var(--ob-amber-dim)]"
+          >
+            View the Modbus Simulator
+          </a>
+          <a
+            href="https://github.com/openbench"
+            class="rounded border border-[var(--ob-blueprint-300)] px-5 py-3 font-mono text-sm text-[var(--ob-blueprint-300)] hover:border-white hover:text-white"
+          >
+            ★ Star on GitHub
+          </a>
+        </div>
+      </div>
+      <RegisterReadout />
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-5xl px-6 py-16">
+    <h2 class="font-display text-2xl font-600">Why open source, why free</h2>
+    <div class="mt-6 grid gap-8 sm:grid-cols-3">
+      <div>
+        <p class="font-mono text-xs text-[var(--ob-amber-dim)]">01 — Audit-able</p>
+        <p class="mt-2 text-sm text-[var(--ob-ink)]/80">
+          Source is public. If your company requires code review before a
+          tool touches an engineering workstation, that's a five-minute
+          conversation instead of a blocker.
+        </p>
+      </div>
+      <div>
+        <p class="font-mono text-xs text-[var(--ob-amber-dim)]">02 — Built by practice</p>
+        <p class="mt-2 text-sm text-[var(--ob-ink)]/80">
+          Every tool here comes from a real gap on a real bench — test,
+          measurement, and automation work, not a hobby guess.
+        </p>
+      </div>
+      <div>
+        <p class="font-mono text-xs text-[var(--ob-amber-dim)]">03 — No paywall to try it</p>
+        <p class="mt-2 text-sm text-[var(--ob-ink)]/80">
+          Local functionality stays free, always. If you get value from it
+          and want to support the work, there's a donate link — never a
+          requirement.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-5xl px-6 pb-20">
+    <h2 class="font-display text-2xl font-600">Tools</h2>
+    <div class="mt-6 grid gap-5 sm:grid-cols-2">
+      {tools.map((tool) => (
+        <ToolCard
+          slug={tool.id}
+          name={tool.data.name}
+          tagline={tool.data.tagline}
+          protocol={tool.data.protocol}
+          status={tool.data.status}
+        />
+      ))}
+    </div>
+  </section>
+</BaseLayout>

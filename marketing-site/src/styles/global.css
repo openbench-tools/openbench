@@ -1,0 +1,90 @@
+@import "tailwindcss";
+
+@import "@fontsource/space-grotesk/500.css";
+@import "@fontsource/space-grotesk/600.css";
+@import "@fontsource/space-grotesk/700.css";
+@import "@fontsource/ibm-plex-sans/400.css";
+@import "@fontsource/ibm-plex-sans/500.css";
+@import "@fontsource/ibm-plex-sans/600.css";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+
+/*
+  OpenBench design tokens — "instrument panel / engineering blueprint"
+
+  Rationale: the audience is test & automation engineers. Blueprint blue +
+  copper/amber instrument-indicator accent is grounded in real bench
+  equipment (panel meters, schematic drawings) rather than a generic
+  dark-mode-plus-neon developer-tool look. Deliberately avoids: warm cream +
+  serif (too editorial), near-black + acid-green (too "hacker product"),
+  broadsheet columns (wrong register for a tools catalog).
+*/
+:root {
+  /* Color */
+  --ob-blueprint-900: #10233A;   /* deepest panel background */
+  --ob-blueprint-800: #16304F;   /* hero/panel background */
+  --ob-blueprint-600: #2C5A85;   /* mid blue, borders on dark */
+  --ob-blueprint-300: #8FB4D1;   /* blueprint grid lines / muted text on dark */
+  --ob-paper: #EEF1F0;           /* content section background, cool not cream */
+  --ob-paper-line: #D7DEDC;      /* hairline rules on paper */
+  --ob-ink: #14201F;             /* body text on paper */
+  --ob-amber: #E8A33D;           /* indicator-lamp accent — CTAs, live values */
+  --ob-amber-dim: #B87F2C;
+  --ob-green-ok: #4F9C6E;        /* status-good, used sparingly */
+
+  /* Type */
+  --ob-font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --ob-font-body: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --ob-font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--ob-font-body);
+  color: var(--ob-ink);
+  background: var(--ob-paper);
+}
+
+h1, h2, h3, .font-display {
+  font-family: var(--ob-font-display);
+  letter-spacing: -0.01em;
+}
+
+code, .font-mono {
+  font-family: var(--ob-font-mono);
+}
+
+/* Subtle blueprint grid texture for panel sections */
+.blueprint-grid {
+  background-image:
+    linear-gradient(var(--ob-blueprint-600) 1px, transparent 1px),
+    linear-gradient(90deg, var(--ob-blueprint-600) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-position: -1px -1px;
+  opacity: 0.15;
+}
+
+/* Reduced motion respected globally */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Visible keyboard focus */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--ob-amber);
+  outline-offset: 2px;
+}

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://openbench.dev/sitemap-index.xml

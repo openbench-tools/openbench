@@ -1,0 +1,26 @@
+---
+interface Props {
+  slug: string;
+  name: string;
+  tagline: string;
+  protocol?: string;
+  status: 'live' | 'coming-soon';
+}
+const { slug, name, tagline, protocol, status } = Astro.props;
+---
+
+<a
+  href={`/tools/${slug}`}
+  class="block rounded-md border border-[var(--ob-paper-line)] bg-white/40 p-6 transition hover:border-[var(--ob-amber-dim)]"
+>
+  <div class="flex items-center justify-between">
+    <h3 class="font-display text-lg font-600">{name}</h3>
+    <span class="font-mono text-[10px] uppercase tracking-wide text-[var(--ob-ink)]/50">
+      {status === 'live' ? 'Live' : 'In development'}
+    </span>
+  </div>
+  <p class="mt-2 text-sm text-[var(--ob-ink)]/75">{tagline}</p>
+  {protocol && (
+    <p class="mt-4 font-mono text-xs text-[var(--ob-amber-dim)]">{protocol}</p>
+  )}
+</a>
