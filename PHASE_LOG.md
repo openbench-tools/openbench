@@ -84,7 +84,23 @@ plain build/test is unaffected). Built `OpenBench-ModbusSimulator-0.1.0-win-x64.
   `https://openbench.dev` (correct once the domain is attached; canonical /
   OG / sitemap URLs use it in the meantime).
 
+---
+
+## Phase 2 — Marketing Push (started)
+
+- **Blog scaffolded** (commit `73d5080`): `blog` content collection, `/blog`
+  index (date-sorted), `/blog/[slug]` via `BlogPostLayout`, `/rss.xml`
+  (`@astrojs/rss`), `<link rel=alternate>` + Blog nav/footer links. First
+  post: *"Modbus Simulator v0.1.0 — first release"*. Also defined the
+  `.prose-ob` markdown styles in `global.css` (were referenced, never
+  defined — also improves the tool-page overview slot). Live & verified on
+  the pages.dev deploy.
+
 **Not done yet:**
+- Plausible custom events on the `data-event` hooks (download / donate / docs
+  / source clicks) — Phase 2 core deliverable.
+- Email capture ("notify me about Pro features") on the tool page.
+- Directory / community submissions (r/PLC, r/embedded, AlternativeTo, PH).
 - Register `openbench.dev` + attach it to the Pages project (Cloudflare
   Registrar — same dashboard).
 - Plausible (or Umami) account → then uncomment the analytics line in
