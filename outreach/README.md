@@ -9,9 +9,10 @@ distribution problem, not a product one, so track it.
 
 | File | Channel | Status |
 |------|---------|--------|
-| [`r-plc-launch.md`](r-plc-launch.md) | r/PLC | draft — hold until openbench.dev is live |
-| [`r-embedded-launch.md`](r-embedded-launch.md) | r/embedded | draft — hold until openbench.dev is live |
-| [`alternativeto-listing.md`](alternativeto-listing.md) | AlternativeTo.net | draft — hold until openbench.dev is live |
+| [`r-plc-launch.md`](r-plc-launch.md) | r/PLC | draft — post first, once openbench.dev is live |
+| [`r-embedded-launch.md`](r-embedded-launch.md) | r/embedded | draft — post alongside r/PLC |
+| [`alternativeto-listing.md`](alternativeto-listing.md) | AlternativeTo.net | draft — submit once openbench.dev is live |
+| [`product-hunt-launch.md`](product-hunt-launch.md) | Product Hunt | draft — do LAST, after some track record; needs a GIF |
 
 ## Posting log
 
@@ -24,7 +25,6 @@ traffic spike in Plausible, GitHub stars/issues that trace back to it).
 
 ## Not yet drafted
 
-- Product Hunt (needs a gallery of images + a maker comment; do this last)
 - Hacker News "Show HN" (only once there's a small track record)
 - LinkedIn automation/test-engineering groups
 - SourceForge mirror listing
